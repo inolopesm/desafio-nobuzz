@@ -1,0 +1,22 @@
+.container {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.card {
+  width: 100%;
+  max-width: 20rem;
+}
+
+.cardBody {
+  display: grid;
+  gap: 1rem;
+}
+
+.title {
+  text-align: center;
+  font-weight: bolder;
+}

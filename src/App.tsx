@@ -1,7 +1,29 @@
+import { Route, Routes } from "react-router-dom";
+import TarefasPage from "./pages/TarefasPage";
+import LoginPage from "./pages/LoginPage";
+import NotFoundPage from "./pages/NotFoundPage";
+import RequireAuth from "./components/RequireAuth";
+
 export default function App() {
   return (
-    <div>
-      <div>Hello World!</div>
-    </div>
+    <Routes>
+      <Route path="/login" element={<LoginPage />} />
+      <Route
+        path="/tarefas"
+        element={
+          <RequireAuth>
+            <TarefasPage />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="*"
+        element={
+          <RequireAuth>
+            <NotFoundPage />
+          </RequireAuth>
+        }
+      />
+    </Routes>
   );
 }

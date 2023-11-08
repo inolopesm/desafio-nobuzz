@@ -1,0 +1,26 @@
+.button {
+  background-color: #111827;
+  color: #fff;
+  border: 1px solid #111827;
+  border-radius: 0.25rem;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: background-color ease 150ms;
+  font-size: 0.875rem;
+}
+
+.button:hover {
+  background-color: #1f2937;
+}
+
+.button:focus {
+  outline-color: transparent;
+  outline-style: solid;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px #111827;
+}
+
+.input:disabled {
+  opacity: 50%;
+  cursor: not-allowed;
+  pointer-events: none;
+}
