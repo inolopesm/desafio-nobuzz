@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Alert from "../../components/Alert";
 import Button from "../../components/Button";
 import CardBody from "../../components/Card/Body";
-import CardRoot from "../../components/Card/Root";
+import Card from "../../components/Card";
 import Input from "../../components/Input";
 import useAuth from "../../hooks/useAuth";
 import styles from "./styles.module.css";
@@ -59,7 +59,7 @@ export default function LoginPage() {
 
   return (
     <div className={styles.container}>
-      <CardRoot className={styles.card}>
+      <Card className={styles.card}>
         <CardBody className={styles.cardBody}>
           <div className={styles.title}>Desafio NoBuzz</div>
           {alert.state && (
@@ -83,7 +83,7 @@ export default function LoginPage() {
             Entrar
           </Button>
         </CardBody>
-      </CardRoot>
+      </Card>
     </div>
   );
 }
