@@ -17,10 +17,12 @@ import request from "../../utils/request";
 
 import TarefasPageCreate from "./components/Create";
 import TarefasPageEdit, { TarefasPageEditProps } from "./components/Edit";
+import TarefasPageExcluirButton from "./components/ExcluirButton";
 import TarefasPageHeader from "./components/Header";
-import styles from "./styles.module.css";
 import TarefasPageConclusaoButton from "./components/ConclusaoButton";
 import requestErrorToAlert from "../../utils/requestErrorToAlert";
+
+import styles from "./styles.module.css";
 
 export default function TarefasPage() {
   const auth = useAuth();
@@ -78,7 +80,7 @@ export default function TarefasPage() {
                     <th>Descrição</th>
                     <th>Status</th>
                     <th>Criado Em</th>
-                    <th>Ação</th>
+                    <th>Ações</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -110,6 +112,12 @@ export default function TarefasPage() {
                         >
                           Editar
                         </Button>
+                        <TarefasPageExcluirButton
+                          tarefa={tarefa}
+                          onSuccess={handleConclusao(index)}
+                          onError={(err) => alert.set(requestErrorToAlert(err))}
+                          className={styles.excluirButton}
+                        />
                       </td>
                     </tr>
                   ))}

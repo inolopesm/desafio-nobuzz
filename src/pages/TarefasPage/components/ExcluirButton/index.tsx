@@ -4,19 +4,19 @@ import useAuth from "../../../../hooks/useAuth";
 import Tarefa from "../../../../interfaces/Tarefa";
 import request, { RequestParams } from "../../../../utils/request";
 
-export interface TarefasPageConclusaoButtonProps {
+export interface TarefasPageExcluirButtonProps {
   tarefa: Tarefa;
   onSuccess: (tarefa: Tarefa) => void;
   onError: (error: unknown) => void;
   className?: ButtonProps["className"];
 }
 
-export default function TarefasPageConclusaoButton({
+export default function TarefasPageExcluirButton({
   tarefa,
   onSuccess,
   onError,
   className,
-}: TarefasPageConclusaoButtonProps) {
+}: TarefasPageExcluirButtonProps) {
   const auth = useAuth();
   const [loading, setLoading] = useState(false);
 
@@ -24,10 +24,9 @@ export default function TarefasPageConclusaoButton({
     setLoading(true);
 
     const params: RequestParams = {
-      method: "PATCH",
-      url: `http://localhost:3000/v1/api/tarefas/${tarefa.id}/conclusao`,
+      method: "DELETE",
+      url: `http://localhost:3000/v1/api/tarefas/${tarefa.id}`,
       headers: { authorization: `Bearer ${auth.accessToken}` },
-      data: { concluido: !tarefa.dataConclusao },
     };
 
     request<Tarefa>(params)
@@ -45,7 +44,7 @@ export default function TarefasPageConclusaoButton({
       disabled={loading}
       onClick={handleClick}
     >
-      {tarefa.dataConclusao ? "Não concluído" : "Concluir"}
+      Excluir
     </Button>
   );
 }

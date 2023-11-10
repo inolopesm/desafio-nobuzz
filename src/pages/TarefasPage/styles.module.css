@@ -28,6 +28,10 @@
   margin-left: 0.5rem;
 }
 
+.excluirButton {
+  margin-left: 0.5rem;
+}
+
 .modalContainer {
   max-width: 768px;
 }
