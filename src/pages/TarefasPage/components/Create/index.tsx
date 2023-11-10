@@ -5,7 +5,7 @@ import Button from "../../../../components/Button";
 import useAlert from "../../../../hooks/useAlert";
 import useAuth from "../../../../hooks/useAuth";
 import Tarefa from "../../../../interfaces/Tarefa";
-import request from "../../../../utils/request";
+import api from "../../../../services/api";
 import requestErrorToAlert from "../../../../utils/requestErrorToAlert";
 import styles from "./styles.module.css";
 
@@ -34,9 +34,9 @@ export default function TarefasPageCreate({
     setLoading(true);
 
     try {
-      const response = await request<Tarefa>({
+      const response = await api<Tarefa>({
         method: "POST",
-        url: "http://localhost:3000/v1/api/tarefas",
+        url: "/tarefas",
         headers: { authorization: `Bearer ${auth.accessToken}` },
         data: { titulo, descricao },
       });

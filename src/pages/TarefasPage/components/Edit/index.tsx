@@ -5,6 +5,7 @@ import Backdrop from "../../../../components/Backdrop";
 import Button from "../../../../components/Button";
 import Card from "../../../../components/Card";
 import CardBody from "../../../../components/Card/Body";
+import Checkbox from "../../../../components/Checkbox";
 import Container from "../../../../components/Container";
 import Input from "../../../../components/Input";
 import TextArea from "../../../../components/TextArea";
@@ -14,11 +15,11 @@ import Tarefa from "../../../../interfaces/Tarefa";
 import useAuth from "../../../../hooks/useAuth";
 import useAlert from "../../../../hooks/useAlert";
 
-import request from "../../../../utils/request";
+import api from "../../../../services/api";
+
 import requestErrorToAlert from "../../../../utils/requestErrorToAlert";
 
 import styles from "./styles.module.css";
-import Checkbox from "../../../../components/Checkbox";
 
 export interface TarefasPageEditProps {
   tarefa: Tarefa;
@@ -42,9 +43,9 @@ export default function TarefasPageEdit({
     setLoading(true);
 
     try {
-      const response = await request<Tarefa>({
+      const response = await api<Tarefa>({
         method: "PUT",
-        url: `http://localhost:3000/v1/api/tarefas/${tarefa.id}`,
+        url: `/tarefas/${tarefa.id}`,
         headers: { authorization: `Bearer ${auth.accessToken}` },
         data: { titulo, descricao, concluido },
       });

@@ -2,7 +2,8 @@ import { useState } from "react";
 import Button, { ButtonProps } from "../../../../components/Button";
 import useAuth from "../../../../hooks/useAuth";
 import Tarefa from "../../../../interfaces/Tarefa";
-import request, { RequestParams } from "../../../../utils/request";
+import api from "../../../../services/api";
+import { RequestParams } from "../../../../utils/request";
 
 export interface TarefasPageExcluirButtonProps {
   tarefa: Tarefa;
@@ -25,11 +26,11 @@ export default function TarefasPageExcluirButton({
 
     const params: RequestParams = {
       method: "DELETE",
-      url: `http://localhost:3000/v1/api/tarefas/${tarefa.id}`,
+      url: `/tarefas/${tarefa.id}`,
       headers: { authorization: `Bearer ${auth.accessToken}` },
     };
 
-    request<Tarefa>(params)
+    api<Tarefa>(params)
       .then((response) => onSuccess(response.data))
       .catch((error) => onError(error))
       .finally(() => setLoading(false));

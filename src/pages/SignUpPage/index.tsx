@@ -8,9 +8,8 @@ import Card from "../../components/Card";
 import Container from "../../components/Container";
 import Input from "../../components/Input";
 import Link from "../../components/Link";
-import useAuth from "../../hooks/useAuth";
 import useAlert from "../../hooks/useAlert";
-import request from "../../utils/request";
+import api from "../../services/api";
 import styles from "./styles.module.css";
 import requestErrorToAlert from "../../utils/requestErrorToAlert";
 
@@ -29,10 +28,9 @@ export default function SignUpPage() {
   const [senhaConfirmacao, setSenhaConfirmacao] = useState("");
   const alert = useAlert();
   const [loading, setLoading] = useState(false);
-  const auth = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     if (email === "") return alert.warn("Campo email é obrigatório");
     if (senha === "") return alert.warn("Campo senha é obrigatório");
 
@@ -53,20 +51,10 @@ export default function SignUpPage() {
 
     setLoading(true);
 
-    try {
-      const response = await request<{ accessToken: string }>({
-        method: "POST",
-        url: "http://localhost:3000/v1/api/usuarios",
-        data: { email, senha },
-      });
-
-      auth.login(response.data.accessToken);
-      navigate("/login");
-    } catch (err) {
-      alert.set(requestErrorToAlert(err));
-    } finally {
-      setLoading(false);
-    }
+    api({ method: "POST", url: "/usuarios", data: { email, senha } })
+      .then(() => navigate("/login"))
+      .catch((err) => alert.set(requestErrorToAlert(err)))
+      .finally(() => setLoading(false));
   };
 
   return (

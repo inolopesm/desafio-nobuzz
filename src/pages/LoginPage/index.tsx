@@ -9,7 +9,7 @@ import Container from "../../components/Container";
 import Input from "../../components/Input";
 import useAuth from "../../hooks/useAuth";
 import useAlert from "../../hooks/useAlert";
-import request from "../../utils/request";
+import api from "../../services/api";
 import styles from "./styles.module.css";
 import requestErrorToAlert from "../../utils/requestErrorToAlert";
 import Link from "../../components/Link";
@@ -41,9 +41,9 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const response = await request<{ accessToken: string }>({
+      const response = await api<{ accessToken: string }>({
         method: "POST",
-        url: "http://localhost:3000/v1/api/sessoes",
+        url: "/sessoes",
         data: { email, senha },
       });
 

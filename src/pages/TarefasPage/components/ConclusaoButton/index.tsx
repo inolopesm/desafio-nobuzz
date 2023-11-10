@@ -2,7 +2,8 @@ import { useState } from "react";
 import Button, { ButtonProps } from "../../../../components/Button";
 import useAuth from "../../../../hooks/useAuth";
 import Tarefa from "../../../../interfaces/Tarefa";
-import request, { RequestParams } from "../../../../utils/request";
+import api from "../../../../services/api";
+import { RequestParams } from "../../../../utils/request";
 
 export interface TarefasPageConclusaoButtonProps {
   tarefa: Tarefa;
@@ -25,12 +26,12 @@ export default function TarefasPageConclusaoButton({
 
     const params: RequestParams = {
       method: "PATCH",
-      url: `http://localhost:3000/v1/api/tarefas/${tarefa.id}/conclusao`,
+      url: `/tarefas/${tarefa.id}/conclusao`,
       headers: { authorization: `Bearer ${auth.accessToken}` },
       data: { concluido: !tarefa.dataConclusao },
     };
 
-    request<Tarefa>(params)
+    api<Tarefa>(params)
       .then((response) => onSuccess(response.data))
       .catch((error) => onError(error))
       .finally(() => setLoading(false));

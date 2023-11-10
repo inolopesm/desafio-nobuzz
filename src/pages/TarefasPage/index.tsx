@@ -11,9 +11,10 @@ import useAuth from "../../hooks/useAuth";
 
 import Tarefa from "../../interfaces/Tarefa";
 
+import api from "../../services/api";
+
 import ellipsis from "../../utils/ellipsis";
 import formatDate from "../../utils/formatDate";
-import request from "../../utils/request";
 
 import TarefasPageCreate from "./components/Create";
 import TarefasPageEdit, { TarefasPageEditProps } from "./components/Edit";
@@ -33,8 +34,8 @@ export default function TarefasPage() {
   useEffect(() => {
     if (!auth.accessToken) return;
 
-    request<Tarefa[]>({
-      url: "http://localhost:3000/v1/api/tarefas",
+    api<Tarefa[]>({
+      url: "/tarefas",
       headers: { authorization: `Bearer ${auth.accessToken}` },
     })
       .then((response) => setTarefas(response.data))
