@@ -61,6 +61,7 @@ export default function TarefasPage() {
       setTarefas([...tarefas, response.data]);
       setTitulo("");
       setDescricao("");
+      setAlert(undefined);
     } catch (error) {
       const err = error as RequestError;
       setAlert({ type: err.type, msg: err.message });
