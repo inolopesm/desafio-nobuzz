@@ -8,28 +8,28 @@ import CardRoot from "../../components/Card/Root";
 import Input from "../../components/Input";
 import useAuth from "../../hooks/useAuth";
 import styles from "./styles.module.css";
+import useAlert from "../../hooks/useAlert";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
-  const [alert, setAlert] = useState<{ type: "warn" | "error"; msg: string }>();
+  const alert = useAlert();
   const [loading, setLoading] = useState(false);
   const auth = useAuth();
   const navigate = useNavigate();
 
-  const emitWarn = (msg: string) => setAlert({ type: "warn", msg });
-
   const handleSubmit = async () => {
-    if (email === "") return emitWarn("Campo email é obrigatório");
-    if (senha === "") return emitWarn("Campo senha é obrigatório");
+    if (email === "") return alert.set("warn", "Campo email é obrigatório");
+    if (senha === "") return alert.set("warn", "Campo senha é obrigatório");
 
     if (email.length > 254)
-      return emitWarn("Campo email deve ter no máximo 254 caracteres");
+      return alert.set("warn", "Campo email deve ter no máximo 254 caracteres");
 
     if (senha.length > 64)
-      return emitWarn("Campo senha deve ter no máximo 64 caracteres");
+      return alert.set("warn", "Campo senha deve ter no máximo 64 caracteres");
 
-    if (!isEmail(email)) return emitWarn("Campo email com valor inválido");
+    if (!isEmail(email))
+      return alert.set("warn", "Campo email com valor inválido");
 
     setLoading(true);
 
@@ -42,12 +42,10 @@ export default function LoginPage() {
     const data = await response.json();
 
     if (response.status >= 400 && response.status <= 599) {
-      return setAlert({
-        type: response.status <= 499 ? "warn" : "error",
-        msg: Array.isArray(data.message)
-          ? data.message.join(", ")
-          : data.message,
-      });
+      return alert.set(
+        response.status <= 499 ? "warn" : "error",
+        Array.isArray(data.message) ? data.message.join(", ") : data.message
+      );
     }
 
     auth.login(data.accessToken);
@@ -59,7 +57,9 @@ export default function LoginPage() {
       <CardRoot className={styles.card}>
         <CardBody className={styles.cardBody}>
           <div className={styles.title}>Login</div>
-          {alert && <Alert type={alert.type}>{alert.msg}</Alert>}
+          {alert.state && (
+            <Alert variant={alert.state.variant}>{alert.state.variant}</Alert>
+          )}
           <Input
             type="email"
             placeholder="nome@exemplo.com"
