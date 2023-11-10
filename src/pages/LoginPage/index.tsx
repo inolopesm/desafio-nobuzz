@@ -9,6 +9,9 @@ import Input from "../../components/Input";
 import useAuth from "../../hooks/useAuth";
 import styles from "./styles.module.css";
 import useAlert from "../../hooks/useAlert";
+import request, { RequestError } from "../../utils/request";
+
+const translate = { "Invalid credentials": "Credenciais inválidas" };
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -33,32 +36,34 @@ export default function LoginPage() {
 
     setLoading(true);
 
-    const response = await fetch("http://localhost:3000/v1/api/sessoes", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ email, senha }),
-    });
+    try {
+      const response = await request<{ accessToken: string }>({
+        method: "POST",
+        url: "http://localhost:3000/v1/api/sessoes",
+        data: { email, senha },
+      });
 
-    const data = await response.json();
-
-    if (response.status >= 400 && response.status <= 599) {
-      return alert.set(
-        response.status <= 499 ? "warn" : "error",
-        Array.isArray(data.message) ? data.message.join(", ") : data.message
+      auth.login(response.data.accessToken);
+      navigate("/tarefas");
+    } catch (err) {
+      alert.set(
+        err instanceof RequestError ? err.type : "error",
+        err instanceof Error
+          ? translate["Invalid credentials"] ?? err.message
+          : String(err)
       );
+    } finally {
+      setLoading(false);
     }
-
-    auth.login(data.accessToken);
-    navigate("/tarefas");
   };
 
   return (
     <div className={styles.container}>
       <CardRoot className={styles.card}>
         <CardBody className={styles.cardBody}>
-          <div className={styles.title}>Login</div>
+          <div className={styles.title}>Desafio NoBuzz</div>
           {alert.state && (
-            <Alert variant={alert.state.variant}>{alert.state.variant}</Alert>
+            <Alert variant={alert.state.variant}>{alert.state.message}</Alert>
           )}
           <Input
             type="email"
