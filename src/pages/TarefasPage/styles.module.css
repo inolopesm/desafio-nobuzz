@@ -1,54 +1,15 @@
-.header {
-  background-color: #fff;
-  padding: 1rem 1.5rem;
-  border-bottom: 1px solid #e5e7eb;
-  margin-bottom: 3rem;
+.main {
+  display: grid;
+  gap: 3rem;
 }
 
-.headerBrand {
-  font-weight: 600;
-  font-size: 1.125rem;
-  line-height: 1.75rem;
+.container {
+  display: grid;
+  gap: 2rem;
 }
 
 .alert {
   margin-bottom: 1rem;
-}
-
-.form {
-  display: flex;
-  gap: 1rem;
-  flex-direction: column;
-  width: 100%;
-  margin-bottom: 1rem;
-}
-
-.formInputs {
-  display: grid;
-  gap: 1rem;
-}
-
-.formButton {
-  display: grid;
-}
-
-@media (min-width: 768px) {
-  .form {
-    flex-direction: row;
-  }
-
-  .formInputs {
-    grid-template-columns: repeat(12, 1fr);
-    flex-grow: 1;
-  }
-
-  .formInputTitulo {
-    grid-column: span 4 / span 4;
-  }
-
-  .formInputDescricao {
-    grid-column: span 8 / span 8;
-  }
 }
 
 .tasks {
@@ -65,4 +26,8 @@
 
 .conclusaoButton {
   margin-left: 0.5rem;
+}
+
+.modalContainer {
+  max-width: 768px;
 }

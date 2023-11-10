@@ -1,15 +1,16 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
+
+export interface AlertState {
+  variant: "warn" | "error";
+  message: string;
+}
 
 export default function useAlert() {
-  const [state, setState] = useState<{
-    variant: "warn" | "error";
-    message: string;
-  }>();
+  const [state, set] = useState<AlertState>();
 
-  const set = (variant: "warn" | "error", message: string) =>
-    setState({ variant, message });
+  const warn = (message: string) => set({ variant: "warn", message });
+  const error = (message: string) => set({ variant: "error", message });
+  const clear = () => set(undefined);
 
-  const clear = () => setState(undefined);
-
-  return { state, set, clear };
+  return useMemo(() => ({ state, set, warn, error, clear }), [state]);
 }

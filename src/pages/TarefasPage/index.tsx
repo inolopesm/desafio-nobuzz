@@ -1,33 +1,32 @@
 import { useEffect, useState } from "react";
-import styles from "./styles.module.css";
-import useAuth from "../../hooks/useAuth";
-import Button from "../../components/Button";
-import Input from "../../components/Input";
-import formatDate from "../../utils/formatDate";
-import Container from "../../components/Container";
-import request, { RequestError } from "../../utils/request";
-import Alert from "../../components/Alert";
-import TableResponsive from "../../components/Table/Responsive";
-import Table from "../../components/Table";
-import ellipsis from "../../utils/ellipsis";
-import useAlert from "../../hooks/useAlert";
 
-interface Tarefa {
-  id: string;
-  titulo: string;
-  descricao: string;
-  dataCriacao: string;
-  dataAtualizacao: string;
-  dataConclusao: string | null;
-}
+import Alert from "../../components/Alert";
+import Button from "../../components/Button";
+import Container from "../../components/Container";
+import Table from "../../components/Table";
+import TableResponsive from "../../components/Table/Responsive";
+
+import useAlert from "../../hooks/useAlert";
+import useAuth from "../../hooks/useAuth";
+
+import Tarefa from "../../interfaces/Tarefa";
+
+import ellipsis from "../../utils/ellipsis";
+import formatDate from "../../utils/formatDate";
+import request from "../../utils/request";
+
+import TarefasPageCreate from "./components/Create";
+import TarefasPageEdit, { TarefasPageEditProps } from "./components/Edit";
+import TarefasPageHeader from "./components/Header";
+import styles from "./styles.module.css";
+import TarefasPageConclusaoButton from "./components/ConclusaoButton";
+import requestErrorToAlert from "../../utils/requestErrorToAlert";
 
 export default function TarefasPage() {
   const auth = useAuth();
   const alert = useAlert();
   const [tarefas, setTarefas] = useState<Tarefa[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [titulo, setTitulo] = useState("");
-  const [descricao, setDescricao] = useState("");
+  const [modal, setModal] = useState<{ tarefa: Tarefa; index: number }>();
 
   useEffect(() => {
     if (!auth.accessToken) return;
@@ -37,152 +36,97 @@ export default function TarefasPage() {
       headers: { authorization: `Bearer ${auth.accessToken}` },
     })
       .then((response) => setTarefas(response.data))
-      .catch((err) =>
-        alert.set(
-          err instanceof RequestError ? err.type : "error",
-          err instanceof Error ? err.message : String(err)
-        )
-      )
-      .finally(() => setLoading(false));
+      .catch((err) => alert.set(requestErrorToAlert(err)));
   }, [auth.accessToken, alert]);
 
-  const handleSubmit = async () => {
-    if (titulo === "") return alert.set("warn", "Campo titulo é obrigatório");
-
-    if (titulo.length > 60)
-      return alert.set("warn", "Campo titulo deve ter no máximo 60 caracteres");
-
-    if (descricao.length > 2 ** 16 - 1)
-      return alert.set(
-        "warn",
-        "Campo descricao deve ter no máximo 64 caracteres"
-      );
-
-    setLoading(true);
-
-    try {
-      const response = await request<Tarefa>({
-        method: "POST",
-        url: "http://localhost:3000/v1/api/tarefas",
-        headers: { authorization: `Bearer ${auth.accessToken}` },
-        data: { titulo, descricao },
-      });
-
-      setTarefas([...tarefas, response.data]);
-
-      setTitulo("");
-      setDescricao("");
-
-      alert.clear();
-    } catch (err) {
-      alert.set(
-        err instanceof RequestError ? err.type : "error",
-        err instanceof Error ? err.message : String(err)
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleConclusao = (tarefa: Tarefa, index: number) => async () => {
-    setLoading(true);
-
-    try {
-      const response = await request<Tarefa>({
-        method: "PATCH",
-        url: `http://localhost:3000/v1/api/tarefas/${tarefa.id}/conclusao`,
-        headers: { authorization: `Bearer ${auth.accessToken}` },
-        data: { concluido: !tarefa.dataConclusao },
-      });
-
-      tarefas[index] = response.data;
+  const handleUpdate =
+    (index: number): TarefasPageEditProps["onUpdate"] =>
+    (tarefa) => {
+      tarefas[index] = tarefa;
       setTarefas([...tarefas]);
+      setModal(undefined);
+    };
 
-      alert.clear();
-    } catch (error) {
-      const err = error as RequestError;
-      alert.set(
-        err instanceof RequestError ? err.type : "error",
-        err instanceof Error ? err.message : String(err)
-      );
-    } finally {
-      setLoading(false);
-    }
+  const handleConclusao = (index: number) => (tarefa: Tarefa) => {
+    tarefas[index] = tarefa;
+    setTarefas([...tarefas]);
+    alert.clear();
   };
 
   return (
-    <>
-      <div className={styles.header}>
-        <div className={styles.headerBrand}>Desafio NoBuzz</div>
-      </div>
-      <Container>
-        {alert.state && (
-          <Alert className={styles.alert} variant={alert.state.variant}>
-            {alert.state.message}
-          </Alert>
-        )}
-        <div className={styles.form}>
-          <div className={styles.formInputs}>
-            <Input
-              className={styles.formInputTitulo}
-              placeholder="Título"
-              value={titulo}
-              onChange={(e) => setTitulo(e.target.value)}
-              disabled={loading}
-            />
-            <Input
-              className={styles.formInputDescricao}
-              placeholder="Descrição (opcional)"
-              value={descricao}
-              onChange={(e) => setDescricao(e.target.value)}
-              disabled={loading}
-            />
-          </div>
-          <div className={styles.formButton}>
-            <Button type="button" onClick={handleSubmit}>
-              Criar tarefa
-            </Button>
-          </div>
-        </div>
-        <div className={styles.tasks}>
-          <TableResponsive>
-            <Table className={styles.table}>
-              <thead>
-                <tr>
-                  <th>Título</th>
-                  <th>Descrição</th>
-                  <th>Status</th>
-                  <th>Criado Em</th>
-                </tr>
-              </thead>
-              <tbody>
-                {tarefas.map((tarefa, index) => (
-                  <tr key={tarefa.id}>
-                    <td>{tarefa.titulo}</td>
-                    <td>{ellipsis(tarefa.descricao, 30)}</td>
-                    <td title={tarefa.dataConclusao ?? undefined}>
-                      {tarefa.dataConclusao ? "concluído" : "não concluído"}
-                      <Button
-                        className={styles.conclusaoButton}
-                        type="button"
-                        variant="secondary"
-                        size="small"
-                        disabled={loading}
-                        onClick={handleConclusao(tarefa, index)}
-                      >
-                        {tarefa.dataConclusao ? "Não concluído" : "Concluir"}
-                      </Button>
-                    </td>
-                    <td title={tarefa.dataCriacao}>
-                      {formatDate(new Date(tarefa.dataCriacao))}
-                    </td>
+    <div className={styles.main}>
+      <TarefasPageHeader />
+
+      <Container className={styles.container}>
+        <TarefasPageCreate
+          onCreate={(tarefa) => setTarefas([...tarefas, tarefa])}
+        />
+
+        <div>
+          {alert.state && (
+            <Alert className={styles.alert} variant={alert.state.variant}>
+              {alert.state.message}
+            </Alert>
+          )}
+
+          <div className={styles.tasks}>
+            <TableResponsive>
+              <Table className={styles.table}>
+                <thead>
+                  <tr>
+                    <th>Título</th>
+                    <th>Descrição</th>
+                    <th>Status</th>
+                    <th>Criado Em</th>
+                    <th>Ação</th>
                   </tr>
-                ))}
-              </tbody>
-            </Table>
-          </TableResponsive>
+                </thead>
+                <tbody>
+                  {tarefas.map((tarefa, index) => (
+                    <tr key={tarefa.id}>
+                      <td>{tarefa.titulo}</td>
+                      <td>{ellipsis(tarefa.descricao, 30)}</td>
+
+                      <td title={tarefa.dataConclusao ?? undefined}>
+                        {tarefa.dataConclusao ? "concluído" : "não concluído"}
+                        <TarefasPageConclusaoButton
+                          tarefa={tarefa}
+                          onSuccess={handleConclusao(index)}
+                          onError={(err) => alert.set(requestErrorToAlert(err))}
+                          className={styles.conclusaoButton}
+                        />
+                      </td>
+
+                      <td title={tarefa.dataCriacao}>
+                        {formatDate(new Date(tarefa.dataCriacao))}
+                      </td>
+
+                      <td>
+                        <Button
+                          type="button"
+                          variant="secondary"
+                          size="small"
+                          onClick={() => setModal({ tarefa, index })}
+                        >
+                          Editar
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            </TableResponsive>
+          </div>
         </div>
       </Container>
-    </>
+
+      {modal && (
+        <TarefasPageEdit
+          tarefa={modal.tarefa}
+          onUpdate={handleUpdate(modal.index)}
+          onClose={() => setModal(undefined)}
+        />
+      )}
+    </div>
   );
 }

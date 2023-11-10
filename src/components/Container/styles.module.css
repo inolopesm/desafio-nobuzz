@@ -1,4 +1,5 @@
 .container {
+  width: 100%;
   padding-left: 1rem;
   padding-right: 1rem;
   margin-left: auto;
@@ -6,30 +7,31 @@
 }
 
 @media (min-width: 640px)	{
-  .container {
+  .container:not(.fluid) {
     max-width: 640px;
   }
 }
 
 @media (min-width: 768px)	{
-  .container {
+  .container:not(.fluid):not(.xs) {
     max-width: 768px;
   }
 }
 
 @media (min-width: 1024px)	{
-  .container {
+  .container:not(.fluid):not(.xs) {
     max-width: 1024px;
   }
 }
 
 @media (min-width: 1280px)	{
-  .container {
+  .container:not(.fluid):not(.xs) {
     max-width: 1280px;
   }
 }
 
 @media (min-width: 1536px)	{
-  .container { max-width: 1536px;
+  .container:not(.fluid):not(.xs) {
+    max-width: 1536px;
   }
 }

@@ -1,0 +1,40 @@
+.container {
+  max-width: 320px;
+}
+
+.cardBody {
+  display: grid;
+  gap: 1rem;
+}
+
+.title {
+  font-weight: 600;
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.label {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 500;
+}
+
+.concluido {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 500;
+}
+
+.buttons {
+  margin-top: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+}
