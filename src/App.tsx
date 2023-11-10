@@ -3,6 +3,7 @@ import TarefasPage from "./pages/TarefasPage";
 import LoginPage from "./pages/LoginPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import RequireAuth from "./components/RequireAuth";
+import SignUpPage from "./pages/SignUpPage";
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
         }
       />
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/signup" element={<SignUpPage />} />
       <Route
         path="/tarefas"
         element={

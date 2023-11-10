@@ -1,0 +1,5 @@
+.link {
+  text-underline-offset: 0.25rem;
+  text-decoration-line: underline;
+  color: inherit;
+}
