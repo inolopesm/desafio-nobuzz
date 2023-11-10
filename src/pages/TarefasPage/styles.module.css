@@ -59,23 +59,10 @@
   line-height: 1.25rem; /* 20px */
 }
 
-.tableResponsive {
-  overflow-x: auto;
+.table tbody td {
+  white-space: nowrap;
 }
 
-.table {
-  border-collapse: collapse;
-  width: 100%;
-}
-
-.table thead th {
-  border-bottom: 1px solid #e5e7eb;
-  text-align: left;
-  font-weight: 500;
-  padding: 0.75rem;
-  color: #6b7280;
-}
-
-.table tbody td  {
-  padding: 0.75rem;
+.conclusaoButton {
+  margin-left: 0.5rem;
 }

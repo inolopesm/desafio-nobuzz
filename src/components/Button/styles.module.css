@@ -1,18 +1,13 @@
 .button {
-  background-color: #111827;
-  color: #fff;
-  border: 1px solid #111827;
+  background-color: transparent;
+  color: inherit;
+  border: 1px solid transparent;
   border-radius: 0.25rem;
-  padding: 0.75rem 1rem;
   cursor: pointer;
-  transition: background-color ease 150ms;
-  font-size: 0.875rem;
-  line-height: 1.25rem;
+  transition: background-color 150ms, border-color 150ms, color 150ms;
   font-weight: 500;
-}
-
-.button:hover {
-  background-color: #1f2937;
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
 }
 
 .button:focus {
@@ -21,8 +16,41 @@
   box-shadow: 0 0 0 2px #fff, 0 0 0 4px #111827;
 }
 
-.input:disabled {
+.button:disabled {
   opacity: 50%;
   cursor: not-allowed;
   pointer-events: none;
+}
+
+.primary {
+  background-color: #111827;
+  border-color: #111827;
+  color: #fff;
+}
+
+.primary:hover {
+  background-color: #374151;
+}
+
+.secondary {
+  border-color: #e5e7eb;
+  color: #111827;
+}
+
+.secondary:hover {
+  background-color: #f3f4f6;
+  border-color: #374151;
+  color: #374151;
+}
+
+.medium {
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.small {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
 }
